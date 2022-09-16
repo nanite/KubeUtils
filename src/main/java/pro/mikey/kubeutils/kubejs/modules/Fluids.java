@@ -28,6 +28,7 @@ public class Fluids {
 
         return ForgeRegistries.FLUIDS.getValues().stream()
                 .filter(e -> e.getRegistryName().getNamespace().equals(namespace))
+                .filter(this::notEmpty)
                 .toList();
     }
 
@@ -46,6 +47,29 @@ public class Fluids {
 
         return ForgeRegistries.FLUIDS.getValues().stream()
                 .filter(e -> namespaces.stream().anyMatch(x -> e.getRegistryName().getNamespace().equals(x)))
+                .filter(this::notEmpty)
                 .toList();
+    }
+
+    /**
+     * Checks if the fluid is not Minecrafts empty fluid
+     *
+     * @param fluid the fluid to check against
+     *
+     * @return if the fluid is not empty
+     */
+    public boolean notEmpty(Fluid fluid) {
+        return fluid != net.minecraft.world.level.material.Fluids.EMPTY;
+    }
+
+    /**
+     * Inverts the logic on notEmpty to check if the fluid is empty
+     *
+     * @param fluid the fluid to check against
+     *
+     * @return if the fluid is empty
+     */
+    public boolean isEmpty(Fluid fluid) {
+        return !notEmpty(fluid);
     }
 }
