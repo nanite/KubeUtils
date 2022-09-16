@@ -38,7 +38,7 @@ public class Fluids {
      * @return a list of fluids that belong to that namespace
      */
     @Nullable
-    public List<Fluid> getFluidsByNamespaces(@Nullable List<String> namespaces) {
+    public List<Fluid> getFluidsByNamespace(@Nullable List<String> namespaces) {
         if (namespaces == null || namespaces.isEmpty()) {
             return List.of();
         }
