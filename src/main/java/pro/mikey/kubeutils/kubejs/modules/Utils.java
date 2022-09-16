@@ -1,8 +1,6 @@
 package pro.mikey.kubeutils.kubejs.modules;
 
 import dev.latvian.mods.kubejs.item.ItemStackJS;
-import dev.latvian.mods.kubejs.util.MapJS;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
@@ -16,7 +14,7 @@ public class Utils {
      * @param entry the thing you want to check against
      * @return if the entry is null or Minecraft empty
      */
-    public static boolean nullOrMcEmpty(Object entry) {
+    public boolean nullOrMcEmpty(Object entry) {
         if (entry == null) {
             return true;
         }

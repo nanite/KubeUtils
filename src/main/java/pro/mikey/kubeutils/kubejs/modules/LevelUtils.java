@@ -14,7 +14,15 @@ public class LevelUtils {
     public LevelUtils() {
     }
 
-    public static void spawnStructure(ServerLevelJS levelUgly, String structureFile, BlockPos spawnLocation) {
+    /**
+     * Spawn a structure into the world at the given block position. If the structure can not be found, nothing
+     * will happen
+     *
+     * @param levelUgly         the current server level
+     * @param structureFile     the structure file as a string version of the resource location
+     * @param spawnLocation     the location you wish spawn the structure at
+     */
+    public void spawnStructure(ServerLevelJS levelUgly, String structureFile, BlockPos spawnLocation) {
         ResourceLocation structureLocation = new ResourceLocation(structureFile);
         ServerLevel level = levelUgly.getMinecraftLevel();
 
@@ -22,7 +30,17 @@ public class LevelUtils {
         structureTemplate.ifPresent(e -> e.placeInWorld(level, spawnLocation, spawnLocation, new StructurePlaceSettings(), level.random, Block.UPDATE_ALL));
     }
 
-    public static BlockPos getRandomLocation(ServerLevelJS level, BlockPos playerPos, int min, int max) {
+    /**
+     * Generate a random location as a {@link BlockPos} at within two given bounds.
+     *
+     * @param level         the level
+     * @param playerPos     the players position
+     * @param min           the min range of the bounds
+     * @param max           the max range of the bounds
+     *
+     * @return the new generated blockpos location
+     */
+    public BlockPos getRandomLocation(ServerLevelJS level, BlockPos playerPos, int min, int max) {
         var randomSource = level.minecraftLevel.random;
         var xRandom = Math.round(randomSource.nextDouble() * (max - min) + min);
         var yRandom = Math.round(randomSource.nextDouble() * (level.minecraftLevel.getMaxBuildHeight() - level.minecraftLevel.getMinBuildHeight()) + level.minecraftLevel.getMinBuildHeight());

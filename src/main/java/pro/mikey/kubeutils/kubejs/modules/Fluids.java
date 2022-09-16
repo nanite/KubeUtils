@@ -29,4 +29,22 @@ public class Fluids {
                 .filter(e -> e.getRegistryName().getNamespace().equals(namespace))
                 .toList();
     }
+
+    /**
+     * Same as {@link Fluids#getFluidsByNamespace(String)} but accepts a list of namespaces
+     *
+     * @param namespaces the namespaces you want to fetch the fluids for
+     *
+     * @return a list of fluids that belong to that namespace
+     */
+    @Nullable
+    public List<Fluid> getFluidsByNamespaces(@Nullable List<String> namespaces) {
+        if (namespaces == null || namespaces.isEmpty()) {
+            return List.of();
+        }
+
+        return ForgeRegistries.FLUIDS.getValues().stream()
+                .filter(e -> namespaces.stream().anyMatch(x -> e.getRegistryName().getNamespace().equals(x)))
+                .toList();
+    }
 }

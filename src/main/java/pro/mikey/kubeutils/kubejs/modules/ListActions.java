@@ -22,7 +22,7 @@ public class ListActions {
      *
      * @return one of the items from the array
      */
-    public static Object getEntryBasedOnWeight(ListJS items) {
+    public Object getEntryBasedOnWeight(ListJS items) {
         double totalWeight = 0.0;
         for (Object i : items) {
             totalWeight += ((Number) ((MapJS) i).get("weight")).doubleValue();
