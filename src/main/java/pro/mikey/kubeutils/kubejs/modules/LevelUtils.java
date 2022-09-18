@@ -2,9 +2,12 @@ package pro.mikey.kubeutils.kubejs.modules;
 
 import dev.latvian.mods.kubejs.level.ServerLevelJS;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
@@ -42,15 +45,30 @@ public class LevelUtils {
      */
     public BlockPos getRandomLocation(ServerLevelJS level, BlockPos playerPos, int min, int max) {
         var randomSource = level.minecraftLevel.random;
-        var xRandom = Math.round(randomSource.nextDouble() * (max - min) + min);
-        var yRandom = Math.round(randomSource.nextDouble() * (level.minecraftLevel.getMaxBuildHeight() - level.minecraftLevel.getMinBuildHeight()) + level.minecraftLevel.getMinBuildHeight());
-        var zRandom = Math.round(randomSource.nextDouble() * (max - min) + min);
 
-        var shift =  randomSource.nextDouble() < 0.5D ? -1 : 1;
-        return new BlockPos(
-          playerPos.getX() + (xRandom * shift),
-          yRandom,
-          playerPos.getZ() + (zRandom * shift)
-        );
+        var insideBox = new BoundingBox(playerPos).inflatedBy(min);
+        var outsideBox = new BoundingBox(playerPos).inflatedBy(max);
+
+        var xRandom = Mth.randomBetween(randomSource, outsideBox.minX(), outsideBox.maxX());
+        var yRandom = Mth.randomBetween(randomSource, outsideBox.minY(), outsideBox.maxY());
+        var zRandom = Mth.randomBetween(randomSource, outsideBox.minZ(), outsideBox.maxZ());
+
+        var tries = 0;
+        while (tries < 50) {
+            var shift =  randomSource.nextDouble() < 0.5D ? -1 : 1;
+            var newPos = new Vec3i(
+                    xRandom * shift,
+                    Mth.clamp(yRandom * shift, level.minecraftLevel.getMinBuildHeight(), level.minecraftLevel.getMaxBuildHeight()),
+                    zRandom * shift
+            );
+
+            if (!insideBox.isInside(newPos)) {
+                return new BlockPos(newPos.getX(), newPos.getY(), newPos.getZ());
+            } else {
+                tries ++;
+            }
+        }
+
+        return playerPos.offset(xRandom, yRandom, zRandom);
     }
 }
