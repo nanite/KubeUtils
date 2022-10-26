@@ -162,8 +162,11 @@ public class LevelUtils {
             return new ArrayList<>();
         }
 
-        if (belowValidator != null && !belowValidator.test(box.getCenter().below())) {
-            return new ArrayList<>();
+        if (belowValidator != null) {
+            BlockPos bottom = new BlockPos(box.minX() + (box.maxX() - box.minX() + 1) / 2, box.minY() - 1, box.minZ() + (box.maxZ() - box.minZ() + 1) / 2);
+            if (!belowValidator.test(bottom)) {
+                return new ArrayList<>();
+            }
         }
 
         return blockPosStream;
