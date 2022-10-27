@@ -1,13 +1,12 @@
 package pro.mikey.kubeutils.kubejs;
 
-import pro.mikey.kubeutils.kubejs.modules.Fluids;
-import pro.mikey.kubeutils.kubejs.modules.LevelUtils;
-import pro.mikey.kubeutils.kubejs.modules.ListActions;
-import pro.mikey.kubeutils.kubejs.modules.Utils;
+import dev.latvian.mods.kubejs.util.ClassWrapper;
+import pro.mikey.kubeutils.kubejs.modules.*;
 
 public interface BaseBindings {
     Fluids Fluids = new Fluids();
     Utils Utils = new Utils();
+    StreamsHelper Streams = new StreamsHelper();
     ListActions Lists = new ListActions();
-    LevelUtils Level = new LevelUtils();
+    ClassWrapper<LevelUtils> Level = new ClassWrapper<>(LevelUtils.class);
 }
