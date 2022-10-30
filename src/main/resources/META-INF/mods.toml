@@ -1,13 +1,11 @@
 modLoader = "javafml"
 loaderVersion = "[40,)"
-license = "All rights reserved"
+license = "GPL3"
 
 [[mods]]
 modId = "kubeutils"
 version = "${version}"
 displayName = "KubeUtils"
-# updateJSONURL="https://changeme.dev/updates.json" #optional
-# displayURL="https://changeme.dev/" #optional
 authors="ErrorMikey"
 description = '''
 Provides extra methods and tools to the standard KubeJS mod
