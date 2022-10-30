@@ -97,7 +97,9 @@ if (ENV.CURSEFORGE_KEY) {
             addGameVersion "Java 17"
             addGameVersion project.minecraft_version
             mainArtifact(remapJar.archiveFile)
-
+            relations {
+                requiredDependency 'kubejs'
+            }
             changelog = file("./CHANGELOG.md")
             changelogType = 'markdown'
         }
