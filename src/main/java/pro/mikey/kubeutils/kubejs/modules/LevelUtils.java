@@ -16,12 +16,14 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
+import pro.mikey.kubeutils.KubeUtils;
 
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
 public class LevelUtils {
+    private static final ResourceLocation UNKNOWN = new ResourceLocation(KubeUtils.getId(), "unknown");
     private final ServerLevel level;
 
     public LevelUtils(ServerLevelJS level) {
@@ -180,6 +182,7 @@ public class LevelUtils {
         if (configuredStructureFeature == null) {
             return false;
         }
+
         return level.structureFeatureManager().getStructureAt(pos, configuredStructureFeature).isValid();
     }
 
@@ -192,5 +195,12 @@ public class LevelUtils {
      */
     public Set<ConfiguredStructureFeature<?, ?>> getStructuresAtLocation(BlockPos pos) {
         return level.structureFeatureManager().getAllStructuresAt(pos).keySet();
+    }
+
+    /**
+     * Gets all the structure ids at a given location, just like {@link #getRandomLocation(BlockPos, int, int)}
+     */
+    public List<ResourceLocation> getStructureIdsAtLocation(BlockPos pos) {
+        return getStructuresAtLocation(pos).stream().map(e -> e.feature.getRegistryName() == null ? UNKNOWN : e.feature.getRegistryName()).toList();
     }
 }
