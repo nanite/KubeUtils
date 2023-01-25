@@ -1,7 +1,7 @@
 # Kube Utils Changelog
 
-## [0.1.3]
+## [1.0.0]
 
 ### Added
 
-- Released for 1.18.2
+- Ported 1.19.2

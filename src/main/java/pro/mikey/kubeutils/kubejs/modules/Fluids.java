@@ -27,7 +27,7 @@ public class Fluids {
         }
 
         return ForgeRegistries.FLUIDS.getValues().stream()
-                .filter(e -> e.getRegistryName().getNamespace().equals(namespace))
+                .filter(e -> ForgeRegistries.FLUIDS.getKey(e).getNamespace().equals(namespace))
                 .filter(this::notEmpty)
                 .toList();
     }
@@ -40,13 +40,13 @@ public class Fluids {
      * @return a list of fluids that belong to that namespace
      */
     @Nullable
-    public List<Fluid> getFluidsByNamespaces(@Nullable ListJS namespaces) {
+    public List<Fluid> getFluidsByNamespaces(@Nullable List<String> namespaces) {
         if (namespaces == null || namespaces.isEmpty()) {
             return List.of();
         }
 
         return ForgeRegistries.FLUIDS.getValues().stream()
-                .filter(e -> namespaces.stream().anyMatch(x -> e.getRegistryName().getNamespace().equals(x)))
+                .filter(e -> namespaces.stream().anyMatch(x -> ForgeRegistries.FLUIDS.getKey(e).getNamespace().equals(x)))
                 .filter(this::notEmpty)
                 .toList();
     }
