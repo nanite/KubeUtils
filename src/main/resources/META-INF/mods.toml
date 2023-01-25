@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[40,)"
+loaderVersion = "[43,)"
 license = "GPL3"
 
 [[mods]]
@@ -14,22 +14,20 @@ Provides extra methods and tools to the standard KubeJS mod
 [[dependencies.kubeutils]]
 modId = "forge"
 mandatory = true
-versionRange = "[40,)"
+versionRange = "[43,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.kubeutils]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.18.2,)"
+versionRange = "[1.19.2,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.kubeutils]]
 modId = "kubejs"
 mandatory = true
-# See above for how to read this notation, this essentially means any
-# version of Minecraft from 1.18.2 (inclusive).
-versionRange = "[1802.5.4-build.533,)"
+versionRange = "[1902.6.0-build.140,)"
 ordering = "NONE"
 side = "BOTH"

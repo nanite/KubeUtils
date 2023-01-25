@@ -1,6 +1,5 @@
 package pro.mikey.kubeutils.kubejs.modules;
 
-import dev.latvian.mods.kubejs.level.ServerLevelJS;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.Vec3i;
@@ -11,11 +10,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.registries.ForgeRegistries;
 import pro.mikey.kubeutils.KubeUtils;
 
 import javax.annotation.Nullable;
@@ -26,8 +26,8 @@ public class LevelUtils {
     private static final ResourceLocation UNKNOWN = new ResourceLocation(KubeUtils.getId(), "unknown");
     private final ServerLevel level;
 
-    public LevelUtils(ServerLevelJS level) {
-        this.level = level.getMinecraftLevel();
+    public LevelUtils(ServerLevel level) {
+        this.level = level.getLevel();
     }
 
     /**
@@ -62,7 +62,7 @@ public class LevelUtils {
                 continue;
             }
 
-            ResourceLocation registryName = current.getType().getRegistryName();
+            ResourceLocation registryName = ForgeRegistries.ENTITY_TYPES.getKey(current.getType());
             if (registryName == null || !registryName.equals(entityId)) {
                 continue;
             }
@@ -178,29 +178,28 @@ public class LevelUtils {
      * @return if the structure is there.
      */
     public boolean isStructureAtLocation(BlockPos pos, ResourceLocation structureId) {
-        ConfiguredStructureFeature<?, ?> configuredStructureFeature = level.getServer().registryAccess().registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY).get(structureId);
-        if (configuredStructureFeature == null) {
+        Structure structure = level.getServer().registryAccess().registryOrThrow(Registry.STRUCTURE_REGISTRY).get(structureId);
+        if (structure == null) {
             return false;
         }
 
-        return level.structureFeatureManager().getStructureAt(pos, configuredStructureFeature).isValid();
+        return level.structureManager().getStructureAt(pos, structure).isValid();
     }
 
     /**
      * Gets all the structures at a given block location
      *
-     * @param pos   the block location you want to check
-     *
+     * @param pos the block location you want to check
      * @return a list (set) of the structures at that location
      */
-    public Set<ConfiguredStructureFeature<?, ?>> getStructuresAtLocation(BlockPos pos) {
-        return level.structureFeatureManager().getAllStructuresAt(pos).keySet();
+    public Set<Structure> getStructuresAtLocation(BlockPos pos) {
+        return level.structureManager().getAllStructuresAt(pos).keySet();
     }
 
     /**
      * Gets all the structure ids at a given location, just like {@link #getRandomLocation(BlockPos, int, int)}
      */
     public List<ResourceLocation> getStructureIdsAtLocation(BlockPos pos) {
-        return getStructuresAtLocation(pos).stream().map(e -> e.feature.getRegistryName() == null ? UNKNOWN : e.feature.getRegistryName()).toList();
+        return getStructuresAtLocation(pos).stream().map(e -> Registry.STRUCTURE_TYPES.getKey(e.type())).toList();
     }
 }

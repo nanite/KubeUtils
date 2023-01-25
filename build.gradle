@@ -48,8 +48,8 @@ dependencies {
 
     forge "net.minecraftforge:forge:${project.forge_version}"
 
-    modApi "dev.latvian.mods:kubejs-forge:1802.5.4-build.533"
-    modApi "dev.latvian.mods:rhino-forge:1802.1.14-build.206"
+    modApi "dev.latvian.mods:kubejs-forge:1902.6.0-build.140"
+    modApi "dev.latvian.mods:rhino-forge:1902.2.2-build.264"
 }
 
 processResources {

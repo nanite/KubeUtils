@@ -1,12 +1,9 @@
 package pro.mikey.kubeutils.kubejs.modules;
 
-import dev.latvian.mods.kubejs.entity.EntityJS;
 import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
 import dev.latvian.mods.rhino.Undefined;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -55,7 +52,7 @@ public class Utils {
             return ((ItemEntity) entry).isRemoved() || ((ItemEntity) entry).getItem().isEmpty();
         }
 
-        return entry instanceof ItemStackJS && entry == ItemStackJS.EMPTY;
+        return false;
     }
 
     /**

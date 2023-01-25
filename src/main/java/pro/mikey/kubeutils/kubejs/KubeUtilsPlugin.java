@@ -5,7 +5,7 @@ import dev.latvian.mods.kubejs.script.BindingsEvent;
 
 public class KubeUtilsPlugin extends KubeJSPlugin {
     @Override
-    public void addBindings(BindingsEvent event) {
+    public void registerBindings(BindingsEvent event) {
         event.add("Ku", BaseBindings.class);
     }
 }
