@@ -1,6 +1,5 @@
 package pro.mikey.kubeutils.kubejs.modules;
 
-import dev.latvian.mods.kubejs.util.ListJS;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -10,8 +9,8 @@ import java.util.List;
 /**
  * Fluid helpers module
  */
-public class Fluids {
-    public Fluids() {
+public class FluidsKu {
+    public FluidsKu() {
     }
 
     /**
@@ -33,7 +32,7 @@ public class Fluids {
     }
 
     /**
-     * Same as {@link Fluids#getFluidsByNamespace(String)} but accepts a list of namespaces
+     * Same as {@link FluidsKu#getFluidsByNamespace(String)} but accepts a list of namespaces
      *
      * @param namespaces the namespaces you want to fetch the fluids for
      *

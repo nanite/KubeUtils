@@ -22,11 +22,11 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class LevelUtils {
+public class LevelKu {
     private static final ResourceLocation UNKNOWN = new ResourceLocation(KubeUtils.getId(), "unknown");
     private final ServerLevel level;
 
-    public LevelUtils(ServerLevel level) {
+    public LevelKu(ServerLevel level) {
         this.level = level.getLevel();
     }
 
