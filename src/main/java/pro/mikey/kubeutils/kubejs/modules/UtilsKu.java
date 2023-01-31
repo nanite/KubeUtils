@@ -1,6 +1,5 @@
 package pro.mikey.kubeutils.kubejs.modules;
 
-import dev.latvian.mods.kubejs.item.ItemStackJS;
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
 import dev.latvian.mods.rhino.Undefined;
 import net.minecraft.resources.ResourceLocation;
@@ -14,11 +13,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
-public class Utils {
+public class UtilsKu {
     private static final ResourceLocation EMPTY_LOCATION = new ResourceLocation("minecraft:empty");
     private static final ResourceLocation AIR_LOCATION = new ResourceLocation("minecraft:air");
 
-    public Utils() {
+    public UtilsKu() {
     }
 
     /**
