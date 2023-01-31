@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.commands.TitleCommand;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -22,11 +23,11 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class LevelUtils {
+public class LevelKu {
     private static final ResourceLocation UNKNOWN = new ResourceLocation(KubeUtils.getId(), "unknown");
     private final ServerLevel level;
 
-    public LevelUtils(ServerLevelJS level) {
+    public LevelKu(ServerLevelJS level) {
         this.level = level.getMinecraftLevel();
     }
 
