@@ -14,4 +14,11 @@ public class OnPlayerLoginEvent {
             KuEventsGroup.PLAYER_STARTING_ITEMS.post(new PlayerStarterItems(event.getEntity()));
         }
     }
+
+    @SubscribeEvent
+    void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        if (!event.getEntity().kjs$getPersistentData().getBoolean(PlayerStarterItems.STARTER_ITEMS_GIVEN_FLAG)) {
+            KuEventsGroup.PLAYER_STARTING_ITEMS.post(new PlayerStarterItems(event.getEntity(), "dimension_change"));
+        }
+    }
 }

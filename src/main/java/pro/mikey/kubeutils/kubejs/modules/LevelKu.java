@@ -84,23 +84,45 @@ public class LevelKu {
      * @param range         the range
      * @param absolute      to check for the state or the block
      *
-     * @return the position of the found block or null when not found
+     * @return the position of the found blocks
      */
-    @Nullable
     public List<BlockPos> findBlockWithinRadius(BlockState block, BlockPos start, int range, boolean absolute) {
         Iterator<BlockPos> iterator = BlockPos.betweenClosedStream(new BoundingBox(start).inflatedBy(range)).iterator();
 
         List<BlockPos> positions = new ArrayList<>();
         while (iterator.hasNext()) {
             var current = iterator.next();
-            if (!absolute && level.getBlockState(current).getBlock() == block.getBlock()) {
-                positions.add(current.immutable());
-            } else if (absolute && level.getBlockState(current) == block) {
+            if (blocksAreEqual(level.getBlockState(current), block, !absolute)) {
                 positions.add(current.immutable());
             }
         }
 
         return positions;
+    }
+
+    /**
+     * Very much the same as {@link #findBlockWithinRadius(BlockState, BlockPos, int, boolean)} but instead will find
+     * the first block and return early with its position. If no block is found then we return null
+     *
+     * @param block the block state we're looking for (block is used in absolute mode)
+     * @param start the starting position
+     * @param range the radius to build from the starting position
+     * @param absolute when true, we check for state equality, when false, we check for block equality
+     *
+     * @return the position of the block found or null when nothing is found.
+     */
+    @Nullable
+    public BlockPos findSingleBlockWithinRadius(BlockState block, BlockPos start, int range, boolean absolute) {
+        Iterator<BlockPos> iterator = BlockPos.betweenClosedStream(new BoundingBox(start).inflatedBy(range)).iterator();
+
+        while (iterator.hasNext()) {
+            var current = iterator.next();
+            if (blocksAreEqual(level.getBlockState(current), block, !absolute)) {
+                return current.immutable();
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -201,5 +223,9 @@ public class LevelKu {
      */
     public List<ResourceLocation> getStructureIdsAtLocation(BlockPos pos) {
         return getStructuresAtLocation(pos).stream().map(e -> Registry.STRUCTURE_TYPES.getKey(e.type())).toList();
+    }
+
+    private static boolean blocksAreEqual(BlockState state, BlockState state2, boolean ignoreState) {
+        return ignoreState ? state == state2 : state.getBlock() == state2.getBlock();
     }
 }
