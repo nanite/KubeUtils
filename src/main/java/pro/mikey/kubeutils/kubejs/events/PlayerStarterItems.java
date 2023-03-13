@@ -37,8 +37,15 @@ public class PlayerStarterItems extends PlayerEventJS {
     private final List<ItemStack> items = new ArrayList<>();
     private final Map<EquipmentSlot, ItemStack> armorItems = new HashMap<>();
 
+    public String triggeredFrom = "join";
+
     public PlayerStarterItems(Player player) {
         this.player = player;
+    }
+
+    public PlayerStarterItems(Player player, String triggeredFrom) {
+        this.player = player;
+        this.triggeredFrom = triggeredFrom;
     }
 
     public void addItems(ItemStack... items) {
