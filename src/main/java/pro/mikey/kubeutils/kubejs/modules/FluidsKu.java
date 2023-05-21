@@ -10,8 +10,7 @@ import java.util.List;
  * Fluid helpers module
  */
 public class FluidsKu {
-    public FluidsKu() {
-    }
+    public FluidsKu() {}
 
     /**
      * Allows the user to get a list of fluids from a specific namespace
@@ -38,7 +37,6 @@ public class FluidsKu {
      *
      * @return a list of fluids that belong to that namespace
      */
-    @Nullable
     public List<Fluid> getFluidsByNamespaces(@Nullable List<String> namespaces) {
         if (namespaces == null || namespaces.isEmpty()) {
             return List.of();
