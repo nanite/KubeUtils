@@ -1,5 +1,6 @@
 package pro.mikey.kubeutils.kubejs.events;
 
+import dev.latvian.mods.kubejs.event.EventResult;
 import dev.latvian.mods.kubejs.item.ItemHandlerUtils;
 import dev.latvian.mods.kubejs.player.PlayerEventJS;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -61,9 +62,10 @@ public class PlayerStarterItems extends PlayerEventJS {
         this.armorItems.put(slot, item);
     }
 
+
     @Override
-    protected void afterPosted(boolean cancelled) {
-        if (cancelled) {
+    protected void afterPosted(EventResult cancelled) {
+        if (cancelled.interruptTrue()) {
             return;
         }
 
