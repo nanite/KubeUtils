@@ -182,7 +182,7 @@ publishMods {
 
     modrinth {
         projectId = modrinth_id
-        accessToken = providers.environmentVariable("NANITE_TOKEN")
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
         minecraftVersions.add("${minecraft_version}")
         requires("kubejs")
     }
