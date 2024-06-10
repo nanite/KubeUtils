@@ -1,130 +1,213 @@
 plugins {
-    id "dev.architectury.loom" version "0.12.0-SNAPSHOT"
-    id "maven-publish"
-    id "com.matthewprenger.cursegradle" version "1.4.0"
+    id 'java-library'
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.neoforged.gradle.userdev' version '7.0.142'
+    id "me.modmuss50.mod-publish-plugin" version "0.5.1"
 }
 
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
+def mcBase = getMinecraftBaseVersion()
+def snapshotEnv = providers.environmentVariable("SNAPSHOT")
+def isSnapshot = snapshotEnv.isPresent() && snapshotEnv.get().toBoolean()
 
-def ENV = System.getenv()
-
-archivesBaseName = project.archives_base_name
-version = "${project.mod_version}+mc${project.minecraft_version}"
+version = "${mcBase}.${project.mod_version}${isSnapshot ? "-SNAPSHOT" : ""}"
 group = project.maven_group
 
-def SNAPSHOT = ENV.SNAPSHOT != null && (ENV.SNAPSHOT == "true" || ENV.SNAPSHOT == true)
-def MAVEN_URL = "https://maven.saps.dev/${SNAPSHOT ? "snapshots" : "releases"}"
-def MAVEN_VERSION = project.version + (SNAPSHOT ? "-SNAPSHOT" : "")
+base {
+    archivesName =project.archives_base_name
+}
 
-loom {
-    silentMojangMappingsLicense()
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-    forge {
-        mixinConfigs = [
-                "kubeutils.mixins.json"
-        ]
+//def MAVEN_URL = "https://maven.saps.dev/${SNAPSHOT ? "snapshots" : "releases"}"
+//def MAVEN_VERSION = project.version + (SNAPSHOT ? "-SNAPSHOT" : "")
 
-        dataGen {
-            mod project.mod_id
-        }
+runs {
+    configureEach {
+        systemProperty 'forge.logging.markers', 'REGISTRIES'
+        systemProperty 'forge.logging.console.level', 'debug'
+
+        modSource project.sourceSets.main
     }
 
-    launches {
-        data {
-            arg "--existing", file("src/main/resources").absolutePath
-        }
+    client {
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
     }
+
+    server {
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+        programArgument '--nogui'
+    }
+
+    data {
+        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
+
+//loom {
+//    silentMojangMappingsLicense()
+//
+//    forge {
+//        mixinConfigs = [
+//                "kubeutils.mixins.json"
+//        ]
+//
+//        dataGen {
+//            mod project.mod_id
+//        }
+//    }
+//
+//    launches {
+//        data {
+//            arg "--existing", file("src/main/resources").absolutePath
+//        }
+//    }
+//}
+
+dependencies {
+    implementation "net.neoforged:neoforge:${mcBase}.${neoforge_version}"
+
+    implementation "dev.latvian.mods:kubejs-neoforge:${kubejs_version}"
 }
 
 repositories {
+    mavenLocal()
+
     maven {
+        name = "Kubejs"
         url "https://maven.saps.dev/minecraft"
+        content {
+            includeGroup "dev.latvian.mods"
+        }
     }
-}
 
-dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.officialMojangMappings()
-
-    forge "net.minecraftforge:forge:${project.forge_version}"
-
-    modApi "dev.latvian.mods:kubejs-forge:1902.6.1-build.327"
-    modApi "dev.latvian.mods:rhino-forge:1902.2.2-build.268"
-}
-
-processResources {
-    inputs.property "version", project.version
-
-    filesMatching("META-INF/mods.toml") {
-        expand "version": project.version
-    }
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-    options.release = 17
-}
-
-java {
-    withSourcesJar()
-}
-
-jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : project.mod_id,
-                "Specification-Vendor"    : project.mod_author,
-                "Specification-Version"   : "1",
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : version,
-                "Implementation-Vendor"   : project.mod_author,
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-}
-
-remapJar {
-    setArchivesBaseName("${project.archivesBaseName}-forge") // adds fabric to the maven and curse name
-}
-
-if (ENV.CURSEFORGE_KEY) {
-    curseforge {
-        apiKey = ENV.CURSEFORGE_KEY
-        project {
-            id = project.curseforge_id
-            releaseType = "release"
-            addGameVersion "Forge"
-            addGameVersion "Java 17"
-            addGameVersion project.minecraft_version
-            mainArtifact(remapJar.archiveFile)
-            relations {
-                requiredDependency 'kubejs'
-            }
-            changelog = file("./CHANGELOG.md")
-            changelogType = 'markdown'
+    maven {
+        url "https://maven.architectury.dev"
+        content {
+            includeGroup "dev.architectury"
         }
     }
 }
+
+tasks.withType(ProcessResources).configureEach {
+    var replaceProperties = [
+            minecraft_version      : minecraft_version,
+            neoforge_base_two      : mcBase,
+            neoforge_loader_version: neoforge_loader_version,
+            version                : version,
+            kubejs_version       : kubejs_version
+    ]
+
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml']) {
+        expand replaceProperties
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
+//
+//if (ENV.CURSEFORGE_KEY) {
+//    curseforge {
+//        apiKey = ENV.CURSEFORGE_KEY
+//        project {
+//            id = project.curseforge_id
+//            releaseType = "release"
+//            addGameVersion "Forge"
+//            addGameVersion "Java 17"
+//            addGameVersion project.minecraft_version
+//            mainArtifact(remapJar.archiveFile)
+//            relations {
+//                requiredDependency 'kubejs'
+//            }
+//            changelog = file("./CHANGELOG.md")
+//            changelogType = 'markdown'
+//        }
+//    }
+//}
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            artifactId = "${project.archivesBaseName}"
+        register('mavenJava', MavenPublication) {
             from components.java
-
-            version = MAVEN_VERSION
         }
     }
-
     repositories {
-        if (ENV.SAPS_TOKEN) {
+        def naniteSecret = providers.environmentVariable("NANITE_TOKEN");
+        if (naniteSecret.isPresent()) {
             maven {
-                url MAVEN_URL
+                url "https://maven.nanite.dev/${isSnapshot ? "snapshots" : "releases"}"
                 credentials {
-                    username = "errormikey"
-                    password = "${ENV.SAPS_TOKEN}"
+                    username = "nanite"
+                    password = naniteSecret.get()
                 }
             }
         }
     }
+}
+
+publishMods {
+    dryRun = providers.environmentVariable("CURSEFORGE_TOKEN").getOrNull() == null
+    changelog = file("./CHANGELOG.md").text
+    version = project.version
+    file = project.provider { project.tasks.jar }.flatMap { it.archiveFile }
+    modLoaders.add("neoforge")
+    type = STABLE
+    displayName = "[${minecraft_version}] KubeUtils ${project.version}"
+
+    curseforge {
+        projectId = curseforge_id
+        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+        minecraftVersions.add("${minecraft_version}")
+        javaVersions.add(JavaVersion.VERSION_17)
+
+        requires("kubejs")
+    }
+
+    modrinth {
+        projectId = modrinth_id
+        accessToken = providers.environmentVariable("NANITE_TOKEN")
+        minecraftVersions.add("${minecraft_version}")
+        requires("kubejs")
+    }
+
+    github {
+        accessToken = providers.environmentVariable("GITHUB_TOKEN")
+        repository = "Nanite/KubeUtils"
+        commitish = providers.environmentVariable("GITHUB_SHA").orElse("dryRun")
+    }
+}
+
+/**
+ * Removes the 1. from Minecraft's version, then adds a 0 to the end if the
+ * version does not contain three dots.
+ */
+def getMinecraftBaseVersion() {
+    def version = project.minecraft_version
+    def parts = version.split("\\.")
+
+    // Remove the first part of the version
+    parts = parts[1..-1]
+
+    if (parts.size() < 2) {
+        parts << "0"
+    }
+
+    return parts.join(".")
 }

@@ -3,6 +3,8 @@ package pro.mikey.kubeutils.kubejs.modules;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -15,7 +17,6 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.registries.ForgeRegistries;
 import pro.mikey.kubeutils.KubeUtils;
 
 import javax.annotation.Nullable;
@@ -62,8 +63,10 @@ public class LevelKu {
                 continue;
             }
 
-            ResourceLocation registryName = ForgeRegistries.ENTITY_TYPES.getKey(current.getType());
-            if (registryName == null || !registryName.equals(entityId)) {
+            var regDefault = BuiltInRegistries.ENTITY_TYPE.getDefaultKey();
+            ResourceLocation registryName = BuiltInRegistries.ENTITY_TYPE.getKey(current.getType());
+            // Special case for unknown entities by comparing the registry name to the entity id
+            if ((entityId == regDefault && registryName != entityId) || !registryName.equals(entityId)) {
                 continue;
             }
 
@@ -147,9 +150,9 @@ public class LevelKu {
         var tries = 0;
         while (tries < 50) {
             var newPos = new Vec3i(
-                    xRandom,
-                    Mth.clamp(yRandom, level.getMinBuildHeight(), level.getMaxBuildHeight()),
-                    zRandom
+                    (int) xRandom,
+                    (int) Mth.clamp(yRandom, level.getMinBuildHeight(), level.getMaxBuildHeight()),
+                    (int) zRandom
             );
 
             if (!insideBox.isInside(newPos)) {
@@ -159,7 +162,7 @@ public class LevelKu {
             }
         }
 
-        return playerPos.offset(xRandom, yRandom, zRandom);
+        return playerPos.offset((int) xRandom, (int) yRandom, (int) zRandom);
     }
 
     /**
@@ -200,7 +203,7 @@ public class LevelKu {
      * @return if the structure is there.
      */
     public boolean isStructureAtLocation(BlockPos pos, ResourceLocation structureId) {
-        Structure structure = level.getServer().registryAccess().registryOrThrow(Registry.STRUCTURE_REGISTRY).get(structureId);
+        Structure structure = level.getServer().registryAccess().registryOrThrow(Registries.STRUCTURE).get(structureId);
         if (structure == null) {
             return false;
         }
@@ -222,7 +225,7 @@ public class LevelKu {
      * Gets all the structure ids at a given location, just like {@link #getRandomLocation(BlockPos, int, int)}
      */
     public List<ResourceLocation> getStructureIdsAtLocation(BlockPos pos) {
-        return getStructuresAtLocation(pos).stream().map(e -> Registry.STRUCTURE_TYPES.getKey(e.type())).toList();
+        return getStructuresAtLocation(pos).stream().map(e -> BuiltInRegistries.STRUCTURE_TYPE.getKey(e.type())).toList();
     }
 
     private static boolean blocksAreEqual(BlockState state, BlockState state2, boolean ignoreState) {

@@ -24,6 +24,6 @@ jobs:
         uses: gradle/gradle-build-action@v2
         env:
           SNAPSHOT: true
-          SAPS_TOKEN: ${{ secrets.SAPS_TOKEN }}
+          NANITE_TOKEN: ${{ secrets.NANITE_DEPLOY }}
         with:
           arguments: publish

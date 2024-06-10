@@ -1,7 +1,8 @@
 package pro.mikey.kubeutils.kubejs.modules;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -24,8 +25,9 @@ public class FluidsKu {
             return null;
         }
 
-        return ForgeRegistries.FLUIDS.getValues().stream()
-                .filter(e -> ForgeRegistries.FLUIDS.getKey(e).getNamespace().equals(namespace))
+        return BuiltInRegistries.FLUID.holders()
+                .filter(e -> e.key().location().getNamespace().equals(namespace))
+                .map(Holder.Reference::value)
                 .filter(this::notEmpty)
                 .toList();
     }
@@ -42,8 +44,9 @@ public class FluidsKu {
             return List.of();
         }
 
-        return ForgeRegistries.FLUIDS.getValues().stream()
-                .filter(e -> namespaces.stream().anyMatch(x -> ForgeRegistries.FLUIDS.getKey(e).getNamespace().equals(x)))
+        return BuiltInRegistries.FLUID.holders()
+                .filter(e -> namespaces.stream().anyMatch(x -> e.key().location().getNamespace().equals(x)))
+                .map(Holder.Reference::value)
                 .filter(this::notEmpty)
                 .toList();
     }

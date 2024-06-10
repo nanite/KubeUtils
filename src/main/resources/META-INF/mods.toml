@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[43,)"
+loaderVersion = "[${neoforge_loader_version},)"
 license = "GPL3"
 
 [[mods]]
@@ -12,22 +12,25 @@ Provides extra methods and tools to the standard KubeJS mod
 '''
 
 [[dependencies.kubeutils]]
-modId = "forge"
-mandatory = true
-versionRange = "[43,)"
+modId = "neoforge"
+required = true
+versionRange = "[${neoforge_base_two},)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.kubeutils]]
 modId = "minecraft"
-mandatory = true
-versionRange = "[1.19.2,)"
+required = true
+versionRange = "[${minecraft_version},)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.kubeutils]]
 modId = "kubejs"
-mandatory = true
-versionRange = "[1902.6.0-build.140,)"
+required = true
+versionRange = "[${kubejs_version},)"
 ordering = "NONE"
 side = "BOTH"
+
+[[mixins]]
+config = "kubeutils.mixins.json"

@@ -1,5 +1,7 @@
 package pro.mikey.kubeutils.kubejs.modules;
 
+import dev.latvian.mods.kubejs.core.ComponentKJS;
+import dev.latvian.mods.kubejs.core.EntityKJS;
 import dev.latvian.mods.rhino.mod.util.color.Color;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
@@ -47,7 +49,7 @@ public class PlayerKu {
     }
 
     public void showActionBar(String text, Color color, boolean bold, boolean italic) {
-        this.player.displayClientMessage(Component.literal(text).kjs$color(color).kjs$bold(bold).kjs$italic(italic), true);
+        this.player.displayClientMessage(((ComponentKJS) ((((ComponentKJS) ((ComponentKJS) Component.literal(text)).kjs$color(color)).kjs$bold(bold)))).kjs$italic(italic), true);
     }
 
     public void showActionBar(String text, Color color) {
@@ -65,7 +67,7 @@ public class PlayerKu {
      * @return if the clear happened
      */
     public boolean clearStarterItemsFlag() {
-        CompoundTag kubePersistent = this.player.kjs$getPersistentData();
+        CompoundTag kubePersistent = ((EntityKJS) this.player).kjs$getPersistentData();
         if (kubePersistent.contains(PlayerStarterItems.STARTER_ITEMS_GIVEN_FLAG) && kubePersistent.getBoolean(PlayerStarterItems.STARTER_ITEMS_GIVEN_FLAG)) {
             kubePersistent.putBoolean(PlayerStarterItems.STARTER_ITEMS_GIVEN_FLAG, false);
             return true;

@@ -1,5 +1,6 @@
 package pro.mikey.kubeutils.kubejs.modules;
 
+import dev.latvian.mods.kubejs.core.LevelKJS;
 import dev.latvian.mods.kubejs.level.BlockContainerJS;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -19,6 +20,6 @@ public class StreamsHelper {
      * @return List of {@link BlockContainerJS}
      */
     public List<BlockContainerJS> mapToBlock(ServerLevel level, List<BlockPos> locations) {
-        return locations.stream().map(level::kjs$getBlock).toList();
+        return locations.stream().map(e -> ((LevelKJS) level).kjs$getBlock(e)).toList();
     }
 }

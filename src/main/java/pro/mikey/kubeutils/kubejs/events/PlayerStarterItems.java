@@ -1,5 +1,6 @@
 package pro.mikey.kubeutils.kubejs.events;
 
+import dev.latvian.mods.kubejs.core.EntityKJS;
 import dev.latvian.mods.kubejs.event.EventResult;
 import dev.latvian.mods.kubejs.item.ItemHandlerUtils;
 import dev.latvian.mods.kubejs.player.PlayerEventJS;
@@ -89,7 +90,7 @@ public class PlayerStarterItems extends PlayerEventJS {
         }
 
         if (inserted) {
-            this.player.kjs$getPersistentData().putBoolean(STARTER_ITEMS_GIVEN_FLAG, true);
+            ((EntityKJS) this.player).kjs$getPersistentData().putBoolean(STARTER_ITEMS_GIVEN_FLAG, true);
         }
     }
 
