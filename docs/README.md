@@ -14,7 +14,7 @@ Utilising modules is simple in KubeJS. The `Ku` namespace is always available bu
 
 Each module below denotes if it's a `static` or `constructed` module through the use of the `static` and `constructed` tags. A `static` module is one you can just use. No need to create it. A `contructed` module is a module you need to create in order to be able to use. A good example of this would be the `players` module. You use this module by calling `new Ku.Player(your_mc_player_object)`. This is in contract to a `static` module like `utils` where you can just use it. For example `Ku.Utils.nullOrEmpty(the_object_you_want_to_check)` 
 
-### [Player `Ku.Player` `contructed`](modules/player.md)
+### [Player `Ku.Player` `constructed`](modules/player.md)
 
 The player module introduces some helpful methods like `showActionBar`, `isClientSide` and the ability to `clearStartItemsFlag` which is part of the Starter items system within KubeUitls
 
