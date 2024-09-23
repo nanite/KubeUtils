@@ -24,7 +24,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class LevelKu {
-    private static final ResourceLocation UNKNOWN = new ResourceLocation(KubeUtils.getId(), "unknown");
+    private static final ResourceLocation UNKNOWN = ResourceLocation.tryParse(KubeUtils.getId() + ":unknown");
     private final ServerLevel level;
 
     public LevelKu(ServerLevel level) {
@@ -39,7 +39,7 @@ public class LevelKu {
      * @param spawnLocation     the location you wish spawn the structure at
      */
     public void spawnStructure(String structureFile, BlockPos spawnLocation) {
-        ResourceLocation structureLocation = new ResourceLocation(structureFile);
+        ResourceLocation structureLocation = ResourceLocation.tryParse(structureFile);
 
         Optional<StructureTemplate> structureTemplate = level.getServer().getStructureManager().get(structureLocation);
         structureTemplate.ifPresent(e -> e.placeInWorld(level, spawnLocation, spawnLocation, new StructurePlaceSettings(), level.random, Block.UPDATE_ALL));

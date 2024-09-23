@@ -2,11 +2,14 @@ package pro.mikey.kubeutils.kubejs.events;
 
 import dev.latvian.mods.kubejs.core.EntityKJS;
 import dev.latvian.mods.kubejs.event.EventResult;
+import dev.latvian.mods.kubejs.event.KubeEvent;
 import dev.latvian.mods.kubejs.item.ItemHandlerUtils;
-import dev.latvian.mods.kubejs.player.PlayerEventJS;
+import dev.latvian.mods.kubejs.player.KubeJSPlayerEventHandler;
+import dev.latvian.mods.rhino.Context;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 import pro.mikey.kubeutils.events.KuEvents;
 import pro.mikey.kubeutils.kubejs.modules.PlayerKu;
 import pro.mikey.kubeutils.utils.Utils;
@@ -32,7 +35,7 @@ import java.util.*;
  * </code
  */
 @KuEvent(KuEvents.PLAYER_STARTER_ITEMS)
-public class PlayerStarterItems extends PlayerEventJS {
+public class PlayerStarterItems extends KubeJSPlayerEventHandler implements KubeEvent {
     public static final String STARTER_ITEMS_GIVEN_FLAG = Utils.kuIdStorage("sig");
 
     private final Player player;
@@ -65,7 +68,12 @@ public class PlayerStarterItems extends PlayerEventJS {
 
 
     @Override
-    protected void afterPosted(EventResult cancelled) {
+    public @Nullable Object defaultExitValue(Context cx) {
+        return KubeEvent.super.defaultExitValue(cx);
+    }
+
+    @Override
+    public void afterPosted(EventResult cancelled) {
         if (cancelled.interruptTrue()) {
             return;
         }
@@ -94,7 +102,6 @@ public class PlayerStarterItems extends PlayerEventJS {
         }
     }
 
-    @Override
     public Player getEntity() {
         return this.player;
     }

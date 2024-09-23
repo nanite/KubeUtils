@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.142'
+    id 'net.neoforged.gradle.userdev' version '7.0.145'
     id "me.modmuss50.mod-publish-plugin" version "0.5.1"
 }
 
@@ -18,10 +18,8 @@ base {
     archivesName =project.archives_base_name
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-//def MAVEN_URL = "https://maven.saps.dev/${SNAPSHOT ? "snapshots" : "releases"}"
-//def MAVEN_VERSION = project.version + (SNAPSHOT ? "-SNAPSHOT" : "")
 
 runs {
     configureEach {
@@ -51,29 +49,8 @@ configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
 
-//loom {
-//    silentMojangMappingsLicense()
-//
-//    forge {
-//        mixinConfigs = [
-//                "kubeutils.mixins.json"
-//        ]
-//
-//        dataGen {
-//            mod project.mod_id
-//        }
-//    }
-//
-//    launches {
-//        data {
-//            arg "--existing", file("src/main/resources").absolutePath
-//        }
-//    }
-//}
-
 dependencies {
-    implementation "net.neoforged:neoforge:${mcBase}.${neoforge_version}"
-
+    implementation "net.neoforged:neoforge:${neoforge_full_version}"
     implementation "dev.latvian.mods:kubejs-neoforge:${kubejs_version}"
 }
 
@@ -101,13 +78,15 @@ tasks.withType(ProcessResources).configureEach {
             minecraft_version      : minecraft_version,
             neoforge_base_two      : mcBase,
             neoforge_loader_version: neoforge_loader_version,
+            neoforge_full_version: neoforge_full_version,
             version                : version,
+            neo_version_range: neo_version_range,
             kubejs_version       : kubejs_version
     ]
 
     inputs.properties replaceProperties
 
-    filesMatching(['META-INF/mods.toml']) {
+    filesMatching(['META-INF/neoforge.mods.toml']) {
         expand replaceProperties
     }
 }
@@ -122,25 +101,6 @@ idea {
         downloadJavadoc = true
     }
 }
-//
-//if (ENV.CURSEFORGE_KEY) {
-//    curseforge {
-//        apiKey = ENV.CURSEFORGE_KEY
-//        project {
-//            id = project.curseforge_id
-//            releaseType = "release"
-//            addGameVersion "Forge"
-//            addGameVersion "Java 17"
-//            addGameVersion project.minecraft_version
-//            mainArtifact(remapJar.archiveFile)
-//            relations {
-//                requiredDependency 'kubejs'
-//            }
-//            changelog = file("./CHANGELOG.md")
-//            changelogType = 'markdown'
-//        }
-//    }
-//}
 
 publishing {
     publications {
