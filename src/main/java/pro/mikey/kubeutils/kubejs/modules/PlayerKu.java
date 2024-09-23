@@ -47,6 +47,7 @@ public class PlayerKu {
     public void showActionBar(String text) {
         this.player.displayClientMessage(Component.literal(text), true);
     }
+    //TODO: Fix showActionBar functions to work with new KubeJS API
 /*
     public void showActionBar(String text, RenderTooltipEvent.Color color, boolean bold, boolean italic) {
         this.player.displayClientMessage(((ComponentKJS) ((((ComponentKJS) ((ComponentKJS) Component.literal(text)).kjs$color((KubeColor) color)).kjs$bold(bold)))).kjs$italic(italic), true);
