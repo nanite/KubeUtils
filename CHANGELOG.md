@@ -1,7 +1,7 @@
 # Kube Utils Changelog
 
-## [20.4.0]
+## [21.1.0]
 
 ### Changed
 
-- Updated to 1.20.4
+- Updated to 1.21.1 thanks to [@Saereth](https://github.com/Saereth)
