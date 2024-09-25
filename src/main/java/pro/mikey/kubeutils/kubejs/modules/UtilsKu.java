@@ -14,8 +14,8 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
 public class UtilsKu {
-    private static final ResourceLocation EMPTY_LOCATION = new ResourceLocation("minecraft:empty");
-    private static final ResourceLocation AIR_LOCATION = new ResourceLocation("minecraft:air");
+    private static final ResourceLocation EMPTY_LOCATION = ResourceLocation.withDefaultNamespace("empty");
+    private static final ResourceLocation AIR_LOCATION = ResourceLocation.withDefaultNamespace("air");
 
     public UtilsKu() {
     }
