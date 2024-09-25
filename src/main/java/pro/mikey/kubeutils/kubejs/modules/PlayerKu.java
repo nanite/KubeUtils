@@ -1,8 +1,8 @@
 package pro.mikey.kubeutils.kubejs.modules;
 
+import dev.latvian.mods.kubejs.color.Color;
 import dev.latvian.mods.kubejs.core.ComponentKJS;
 import dev.latvian.mods.kubejs.core.EntityKJS;
-import dev.latvian.mods.rhino.mod.util.color.Color;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -26,7 +26,7 @@ public class PlayerKu {
      * the {@link Component} class can offer whilst having alternative methods to display simpler text like a string.
      *
      * @see #showActionBar(String)
-     * @see #showActionBar(String, Color, boolean, boolean)
+     *
      *
      * <b>Example</b>
      * <code>

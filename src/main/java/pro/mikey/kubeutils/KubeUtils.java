@@ -1,5 +1,6 @@
 package pro.mikey.kubeutils;
 
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import org.apache.logging.log4j.LogManager;
@@ -18,5 +19,9 @@ public class KubeUtils {
 
     public static String getId() {
         return MOD_ID;
+    }
+
+    public static ResourceLocation id(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
 }
