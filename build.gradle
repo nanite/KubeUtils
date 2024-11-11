@@ -20,9 +20,6 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-//def MAVEN_URL = "https://maven.saps.dev/${SNAPSHOT ? "snapshots" : "releases"}"
-//def MAVEN_VERSION = project.version + (SNAPSHOT ? "-SNAPSHOT" : "")
-
 runs {
     configureEach {
         systemProperty 'forge.logging.markers', 'REGISTRIES'
@@ -51,30 +48,10 @@ configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
 
-//loom {
-//    silentMojangMappingsLicense()
-//
-//    forge {
-//        mixinConfigs = [
-//                "kubeutils.mixins.json"
-//        ]
-//
-//        dataGen {
-//            mod project.mod_id
-//        }
-//    }
-//
-//    launches {
-//        data {
-//            arg "--existing", file("src/main/resources").absolutePath
-//        }
-//    }
-//}
-
 dependencies {
-    implementation "net.neoforged:neoforge:${mcBase}.${neoforge_version}"
+    implementation "net.neoforged:forge:${minecraft_version}-${neoforge_version}"
 
-    implementation "dev.latvian.mods:kubejs-neoforge:${kubejs_version}"
+    implementation "dev.latvian.mods:kubejs-forge:${kubejs_version}"
 }
 
 repositories {
@@ -122,25 +99,6 @@ idea {
         downloadJavadoc = true
     }
 }
-//
-//if (ENV.CURSEFORGE_KEY) {
-//    curseforge {
-//        apiKey = ENV.CURSEFORGE_KEY
-//        project {
-//            id = project.curseforge_id
-//            releaseType = "release"
-//            addGameVersion "Forge"
-//            addGameVersion "Java 17"
-//            addGameVersion project.minecraft_version
-//            mainArtifact(remapJar.archiveFile)
-//            relations {
-//                requiredDependency 'kubejs'
-//            }
-//            changelog = file("./CHANGELOG.md")
-//            changelogType = 'markdown'
-//        }
-//    }
-//}
 
 publishing {
     publications {
@@ -167,7 +125,7 @@ publishMods {
     changelog = file("./CHANGELOG.md").text
     version = project.version
     file = project.provider { project.tasks.jar }.flatMap { it.archiveFile }
-    modLoaders.add("neoforge")
+    modLoaders.add("forge")
     type = STABLE
     displayName = "[${minecraft_version}] KubeUtils ${project.version}"
 

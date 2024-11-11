@@ -1,8 +1,8 @@
 package pro.mikey.kubeutils.events;
 
 import dev.latvian.mods.kubejs.core.EntityKJS;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import pro.mikey.kubeutils.kubejs.events.KuEventsGroup;
 import pro.mikey.kubeutils.kubejs.events.PlayerStarterItems;
 
