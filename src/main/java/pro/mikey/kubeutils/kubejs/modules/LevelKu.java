@@ -7,6 +7,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,6 +24,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
+@SuppressWarnings("unused")
 public class LevelKu {
     private static final ResourceLocation UNKNOWN = KubeUtils.id("unknown");
     private final ServerLevel level;
@@ -56,13 +58,48 @@ public class LevelKu {
      * @param range         the range to select entities within
      *
      * @return the list of entities found.
+     * @deprecated Use {@link #findLivingEntitiesWithinRadius(ResourceLocation, BlockPos, int)}
      */
+    @Deprecated
     public List<LivingEntity> findEntitiesWithinRadius(ResourceLocation entityId, BlockPos start, int range) {
+        return _findEntityInRange(LivingEntity.class, entityId, start, range)
+                .stream()
+                .map(e -> (LivingEntity) e)
+                .toList();
+    }
+
+    /**
+     * Find living entities within a radius based on an entity type
+     *
+     * @param entityId      the entity resource location (id)
+     * @param start         the starting position to build the bounding box from
+     * @param range         the range to select entities within
+     *
+     * @return the list of entities found.
+     */
+    public List<LivingEntity> findLivingEntitiesWithinRadius(ResourceLocation entityId, BlockPos start, int range) {
+        return findEntitiesWithinRadius(entityId, start, range);
+    }
+
+    /**
+     * Find any entities within a radius based on an entity type
+     *
+     * @param entityId      the entity resource location (id)
+     * @param start         the starting position to build the bounding box from
+     * @param range         the range to select entities within
+     *
+     * @return the list of entities found.
+     */
+    public List<Entity> findAnyEntitiesWithinRadius(ResourceLocation entityId, BlockPos start, int range) {
+        return _findEntityInRange(Entity.class, entityId, start, range);
+    }
+
+    private List<Entity> _findEntityInRange(Class<? extends Entity> entityClass, ResourceLocation entityId, BlockPos start, int range) {
         AABB boundingBox = new AABB(start).inflate(range);
 
-        List<LivingEntity> entities = new ArrayList<>();
+        List<Entity> entities = new ArrayList<>();
         for (Entity current : level.getEntities().getAll()) {
-            if (!(current instanceof LivingEntity)) {
+            if (!entityClass.isInstance(current)) {
                 continue;
             }
 
@@ -74,7 +111,7 @@ public class LevelKu {
             }
 
             if (boundingBox.contains(current.position())) {
-                entities.add((LivingEntity) current);
+                entities.add(current);
             }
         }
 
@@ -124,6 +161,30 @@ public class LevelKu {
         while (iterator.hasNext()) {
             var current = iterator.next();
             if (blocksAreEqual(level.getBlockState(current), block, !absolute)) {
+                return current.immutable();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * The same as {@link #findSingleBlockWithinRadius(BlockState, BlockPos, int, boolean)} but instead of a block state
+     * we use a block tag to find the block.
+     *
+     * @param blockTag the block tag we're looking for
+     * @param start the starting position
+     * @param range the radius to build from the starting position
+     *
+     * @return the position of the block found or null when nothing is found.
+     */
+    @Nullable
+    public BlockPos findFirstBlockTagWithinRadius(TagKey<Block> blockTag, BlockPos start, int range) {
+        Iterator<BlockPos> iterator = BlockPos.betweenClosedStream(new BoundingBox(start).inflatedBy(range)).iterator();
+
+        while (iterator.hasNext()) {
+            var current = iterator.next();
+            if (level.getBlockState(current).is(blockTag)) {
                 return current.immutable();
             }
         }

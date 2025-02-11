@@ -31,8 +31,9 @@ kuLevel.spawnStructure("minecraft:structures/village_1", BlockPos.ZERO);
 This method fails softly meaning if the structure does not exist, the method will simply do nothing.
 
 ### `findEntitiesWithinRadius(entityId: EntityType, start: BlockPos, range: Number)`
+### `Deprecated: Use findLivingEntitiesWithinRadius`
 
-Find entities within a radius based on an entity type. The entity type would typically look like `minecraft:skeleton`. You can typically find modded ones from the mods Java code. 
+Find living entities within a radius based on an entity type. The entity type would typically look like `minecraft:skeleton`. You can typically find modded ones from the mods Java code. 
 
 The search radius is from and expanded cube from the start block position. This means that a range of 1 would be a 3x3 cube with the start position in the middle.
 
@@ -43,6 +44,35 @@ const kuLevel = new Ku.Level(...);
 const entities = kuLevel.findEntitiesWithinRadius("minecraft:skeleton", BlockPos.ZERO, 4);
 console.log(entities)
 ```
+
+### `findLivingEntitiesWithinRadius(entityId: EntityType, start: BlockPos, range: Number)`
+
+Find living entities within a radius based on an entity type. The entity type would typically look like `minecraft:skeleton`. You can typically find modded ones from the mods Java code.
+
+The search radius is from and expanded cube from the start block position. This means that a range of 1 would be a 3x3 cube with the start position in the middle.
+
+`@return net.minecraft.world.entity.LivingEntity[]`
+
+```javascript
+const kuLevel = new Ku.Level(...);
+const entities = kuLevel.findLivingEntitiesWithinRadius("minecraft:skeleton", BlockPos.ZERO, 4);
+console.log(entities)
+```
+
+### `findAnyEntitiesWithinRadius(entityId: EntityType, start: BlockPos, range: Number)`
+
+Find any entities within a radius based on an entity type. The entity type would typically look like `minecraft:skeleton`. You can typically find modded ones from the mods Java code.
+
+The search radius is from and expanded cube from the start block position. This means that a range of 1 would be a 3x3 cube with the start position in the middle.
+
+`@return net.minecraft.world.entity.Entity[]`
+
+```javascript
+const kuLevel = new Ku.Level(...);
+const entities = kuLevel.findAnyEntitiesWithinRadius("minecraft:display", BlockPos.ZERO, 4);
+console.log(entities)
+```
+
 
 ### `findBlockWithinRadius(blockstate: BlockState, start: BlockPos, range: Number, absolute: boolean)`
 
@@ -63,6 +93,12 @@ console.log(locations) // [{x: 0, y: 0; z: 0}]
 ### `findSingleBlockWithinRadius(blockstate: BlockState, start: BlockPos, range: number, absolute: boolean)`
 
 Very much the same as `findBlockWithinRadius` but instead will find the first block and return early with its position. If no block is found then we return null
+
+`@return BlockPos | null`
+
+### `findFirstBlockTagWithinRadius(tag: TagKey<Block>, start: BlockPos, range: number)`
+
+Very much the same as `findBlockWithinRadius` but instead of a block state we use a block tag to find the block.
 
 `@return BlockPos | null`
 
