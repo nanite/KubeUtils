@@ -26,11 +26,7 @@ Currently, we only have a few helpers to some of the lesser supported areas of K
 
 ## TODO 
 
-- [ ] Port to Fabric (coming soon)
-- [ ] Expand the modules
-- [ ] Figure out a versionable code schema
-- [ ] Get out of beta test
-- [ ] Website based documentation
+- [ ] Expand the modules (looking for suggestions)
 
 ## Documentation
 

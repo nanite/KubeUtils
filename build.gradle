@@ -3,8 +3,8 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.142'
-    id "me.modmuss50.mod-publish-plugin" version "0.5.1"
+    id 'net.neoforged.moddev.legacyforge' version '2.0.78'
+    id "me.modmuss50.mod-publish-plugin" version "0.8.3"
 }
 
 def mcBase = getMinecraftBaseVersion()
@@ -20,38 +20,42 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-runs {
-    configureEach {
-        systemProperty 'forge.logging.markers', 'REGISTRIES'
-        systemProperty 'forge.logging.console.level', 'debug'
+legacyForge {
+    version = project.minecraft_version + "-" + project.neoforge_version
 
-        modSource project.sourceSets.main
+    runs {
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            systemProperty 'forge.logging.console.level', 'debug'
+        }
+
+        client {
+            client()
+        }
+
+        server {
+            server()
+            programArgument '--nogui'
+        }
+
+        data {
+            data()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        }
     }
 
-    client {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-    }
-
-    server {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-        programArgument '--nogui'
-    }
-
-    data {
-        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+    mods {
+        kubeutils {
+            sourceSet sourceSets.main
+        }
     }
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
-configurations {
-    runtimeClasspath.extendsFrom localRuntime
-}
-
 dependencies {
-    implementation "net.neoforged:forge:${minecraft_version}-${neoforge_version}"
-
-    implementation "dev.latvian.mods:kubejs-forge:${kubejs_version}"
+    modImplementation "dev.latvian.mods:kubejs-forge:${kubejs_version}"
+    modImplementation "dev.latvian.mods:rhino-forge:${rhino_version}"
 }
 
 repositories {
@@ -59,7 +63,7 @@ repositories {
 
     maven {
         name = "Kubejs"
-        url "https://maven.saps.dev/minecraft"
+        url "https://maven.latvian.dev/releases"
         content {
             includeGroup "dev.latvian.mods"
         }
@@ -124,7 +128,7 @@ publishMods {
     dryRun = providers.environmentVariable("CURSEFORGE_TOKEN").getOrNull() == null
     changelog = file("./CHANGELOG.md").text
     version = project.version
-    file = project.provider { project.tasks.jar }.flatMap { it.archiveFile }
+    file = reobfJar.archiveFile
     modLoaders.add("forge")
     type = STABLE
     displayName = "[${minecraft_version}] KubeUtils ${project.version}"
