@@ -1,6 +1,6 @@
 package pro.mikey.kubeutils.kubejs.modules;
 
-import dev.latvian.mods.kubejs.color.Color;
+import dev.latvian.mods.kubejs.color.KubeColor;
 import dev.latvian.mods.kubejs.core.ComponentKJS;
 import dev.latvian.mods.kubejs.core.EntityKJS;
 import net.minecraft.client.player.LocalPlayer;
@@ -48,15 +48,15 @@ public class PlayerKu {
         this.player.displayClientMessage(Component.literal(text), true);
     }
 
-    public void showActionBar(String text, Color color, boolean bold, boolean italic) {
+    public void showActionBar(String text, KubeColor color, boolean bold, boolean italic) {
         this.player.displayClientMessage(((ComponentKJS) ((((ComponentKJS) ((ComponentKJS) Component.literal(text)).kjs$color(color)).kjs$bold(bold)))).kjs$italic(italic), true);
     }
 
-    public void showActionBar(String text, Color color) {
+    public void showActionBar(String text, KubeColor color) {
         this.showActionBar(text, color, false, false);
     }
 
-    public void showActionBar(String text, Color color, boolean bold) {
+    public void showActionBar(String text, KubeColor color, boolean bold) {
         this.showActionBar(text, color, bold, false);
     }
     //#endregion
