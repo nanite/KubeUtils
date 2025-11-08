@@ -1,11 +1,13 @@
 package pro.mikey.kubeutils.kubejs.modules;
 
-import dev.latvian.mods.kubejs.util.ListJS;
-import dev.latvian.mods.kubejs.util.MapJS;
+import dev.latvian.mods.rhino.Context;
+import dev.latvian.mods.rhino.NativeObject;
+import dev.latvian.mods.rhino.type.TypeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 
 public class ListsKu {
     private static final Logger LOGGER = LoggerFactory.getLogger(ListsKu.class);
@@ -14,27 +16,33 @@ public class ListsKu {
     }
 
     /**
-     * Takes in a list of objects with two properties an {@link Object} entry, and a {@link Object} weight
-     * which is type cast to a double. This method will then use the weight to find a single item based on
-     * a random selection that takes the items weight into consideration
+     * Takes in a list of items that each contain a weight property and an entry property. We then will randomly
+     * select one of the entries based on their weight.
      *
      * @param items List of Map<{weight: double, entry: any}>
      *
      * @return one of the items from the array
      */
-    public Object getEntryBasedOnWeight(Object... items) {
-        double totalWeight = 0.0;
-        var inputs = ListJS.orSelf(items).stream().map(MapJS::of).toList();
-        for (Map<?, ?> input : inputs) {
-            totalWeight += ((Number) input.get("weight")).doubleValue();
+    public <T> T getEntryBasedOnWeight(WeightedEntry<T>... items) {
+        var inputs = Arrays.asList(items);
+
+        double totalWeight = 0.0D;
+
+        for (WeightedEntry<T> input : items) {
+            totalWeight += input.weight;
         }
 
         int idx = 0;
         for (double r = Math.random() * totalWeight; idx < inputs.size() - 1; ++idx) {
-            r -= ((Number) inputs.get(idx).get("weight")).doubleValue();
+            r -= inputs.get(idx).weight;
             if (r <= 0.0) break;
         }
 
-        return inputs.get(idx).get("entry");
+        return inputs.get(idx).entry;
     }
+
+    public record WeightedEntry<T>(
+        T entry,
+        double weight
+    ) {}
 }

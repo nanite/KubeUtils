@@ -28,7 +28,7 @@ side = "BOTH"
 [[dependencies.kubeutils]]
 modId = "kubejs"
 required = true
-versionRange = "[${kubejs_version},)"
+versionRange = "${kubejs_version_range}"
 ordering = "NONE"
 side = "BOTH"
 

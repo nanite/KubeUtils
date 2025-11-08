@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - "release/1.*/*"
+      - "v/*.*.*"
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
       - name: Build & Publish
         uses: gradle/gradle-build-action@v2
         env:

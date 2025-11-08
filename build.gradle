@@ -1,11 +1,15 @@
 plugins {
     id 'java-library'
-    id 'eclipse'
-    id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.145'
-    id "me.modmuss50.mod-publish-plugin" version "0.5.1"
+    id 'net.neoforged.moddev' version '2.0.116'
+    id 'idea'
+    id "me.modmuss50.mod-publish-plugin" version "1.1.0"
 }
+
+tasks.named('wrapper', Wrapper).configure {
+    distributionType = Wrapper.DistributionType.BIN
+}
+
 
 def mcBase = getMinecraftBaseVersion()
 def snapshotEnv = providers.environmentVariable("SNAPSHOT")
@@ -15,31 +19,42 @@ version = "${mcBase}.${project.mod_version}${isSnapshot ? "-SNAPSHOT" : ""}"
 group = project.maven_group
 
 base {
-    archivesName =project.archives_base_name
+    archivesName = project.archives_base_name
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+neoForge {
+    version = project.neoforge_full_version
 
+    // This line is optional. Access Transformers are automatically detected
+    // accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
+    runs {
+        client {
+            client()
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
 
-runs {
-    configureEach {
-        systemProperty 'forge.logging.markers', 'REGISTRIES'
-        systemProperty 'forge.logging.console.level', 'debug'
+        server {
+            server()
+            programArgument '--nogui'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
 
-        modSource project.sourceSets.main
+        data {
+            data()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        }
+
+        // applies to all the run configs above
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            logLevel = org.slf4j.event.Level.DEBUG
+        }
     }
 
-    client {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-    }
-
-    server {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-        programArgument '--nogui'
-    }
-
-    data {
-        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
     }
 }
 
@@ -50,7 +65,6 @@ configurations {
 }
 
 dependencies {
-    implementation "net.neoforged:neoforge:${neoforge_full_version}"
     implementation "dev.latvian.mods:kubejs-neoforge:${kubejs_version}"
 }
 
@@ -63,6 +77,13 @@ repositories {
         content {
             includeGroup "dev.latvian.mods"
             includeGroup "dev.latvian.apps"
+        }
+    }
+
+    maven {
+        url 'https://jitpack.io'
+        content {
+            includeGroup "com.github.rtyley"
         }
     }
 
@@ -82,7 +103,8 @@ tasks.withType(ProcessResources).configureEach {
             neoforge_full_version: neoforge_full_version,
             version                : version,
             neo_version_range: neo_version_range,
-            kubejs_version       : kubejs_version
+            kubejs_version       : kubejs_version,
+            kubejs_version_range       : kubejs_version_range
     ]
 
     inputs.properties replaceProperties
@@ -94,6 +116,7 @@ tasks.withType(ProcessResources).configureEach {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"
+    options.release.set(21)
 }
 
 idea {

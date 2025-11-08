@@ -1,6 +1,5 @@
 package pro.mikey.kubeutils.kubejs.modules;
 
-import dev.latvian.mods.kubejs.level.BlockContainerJS;
 import dev.latvian.mods.rhino.Undefined;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -35,8 +34,6 @@ public class UtilsKu {
             return entry == "" || entry.equals("minecraft:empty") || entry.equals("minecraft:air");
         } else if (entry instanceof ResourceLocation) {
             return entry.equals(EMPTY_LOCATION) || entry.equals(AIR_LOCATION);
-        } else if (entry instanceof BlockContainerJS) {
-            return ((BlockContainerJS) entry).getBlockState().isAir();
         } else if (entry instanceof Block) {
             return entry == Blocks.AIR;
         } else if (entry instanceof BlockState) {
