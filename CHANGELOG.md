@@ -1,5 +1,11 @@
 # Kube Utils Changelog
 
+## [21.1.2]
+
+### Fixed
+
+- Issues with KubeJS 7.2+
+
 ## [21.1.1]
 
 ### Added 
