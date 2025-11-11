@@ -1,8 +1,8 @@
 package pro.mikey.kubeutils.kubejs.modules;
 
 import dev.latvian.mods.rhino.Context;
-import dev.latvian.mods.rhino.NativeObject;
 import dev.latvian.mods.rhino.type.TypeInfo;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,22 +23,23 @@ public class ListsKu {
      *
      * @return one of the items from the array
      */
-    public <T> T getEntryBasedOnWeight(WeightedEntry<T>... items) {
-        var inputs = Arrays.asList(items);
-
+    @SuppressWarnings("unchecked")
+    public Object getEntryBasedOnWeight(Context ctx, List<Object> items) {
         double totalWeight = 0.0D;
 
-        for (WeightedEntry<T> input : items) {
+        List<WeightedEntry<?>> entires = (List<WeightedEntry<?>>) ctx.listOf(items, TypeInfo.of(WeightedEntry.class));
+
+        for (WeightedEntry<?> input : entires) {
             totalWeight += input.weight;
         }
 
         int idx = 0;
-        for (double r = Math.random() * totalWeight; idx < inputs.size() - 1; ++idx) {
-            r -= inputs.get(idx).weight;
+        for (double r = Math.random() * totalWeight; idx < entires.size() - 1; ++idx) {
+            r -= entires.get(idx).weight;
             if (r <= 0.0) break;
         }
 
-        return inputs.get(idx).entry;
+        return entires.get(idx).entry;
     }
 
     public record WeightedEntry<T>(

@@ -1,5 +1,11 @@
 # Kube Utils Changelog
 
+## [21.1.3]
+
+### Fixed
+
+- `ListKu.getRandomWeightedEntry` no longer breaks when given valid data
+
 ## [21.1.2]
 
 ### Fixed
